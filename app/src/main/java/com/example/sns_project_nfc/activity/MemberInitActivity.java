@@ -116,20 +116,17 @@ public class MemberInitActivity extends BasicActivity {
         final String phoneNumber = ((EditText) findViewById(R.id.phoneNumber)).getText().toString();
         final String userID = ((EditText) findViewById(R.id.userID)).getText().toString();
         final String address = ((EditText) findViewById(R.id.address)).getText().toString();
-        Spinner building_spinner = (Spinner) findViewById(R.id.building_spinner);
-        Spinner unit_spinner = (Spinner) findViewById(R.id.unit_spinner);
-        building_spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                building = (String) parent.getItemAtPosition(position);
-            }
-        });
-        unit_spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                unit = (String) parent.getItemAtPosition(position);
-            }
-        });
+//        Spinner building_spinner = (Spinner) findViewById(R.id.building_spinner);
+//        Spinner unit_spinner = (Spinner) findViewById(R.id.unit_spinner);
+//                building = (String) building_spinner.getItemAtPosition(position);
+        final String building = ((Spinner)findViewById(R.id.building_spinner)).getSelectedItem().toString();
+//        unit_spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                unit = (String) parent.getItemAtPosition(position);
+//            }
+//        });
+        final String unit = ((Spinner)findViewById(R.id.unit_spinner)).getSelectedItem().toString();
 
 
         if (name.length() > 0 && phoneNumber.length() > 9 && userID.length() > 5 && address.length() > 0) {

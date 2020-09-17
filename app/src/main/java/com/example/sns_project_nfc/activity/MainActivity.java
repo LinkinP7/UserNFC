@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.sns_project_nfc.R;
 import com.example.sns_project_nfc.fragment.AnnounceFragment;
+import com.example.sns_project_nfc.fragment.CheckListFragment;
 import com.example.sns_project_nfc.fragment.UserInfoFragment;
 import com.example.sns_project_nfc.fragment.UserListFragment;
 import com.example.sns_project_nfc.fragment.nfcFragment;
@@ -113,10 +114,10 @@ public class MainActivity extends BasicActivity {                               
                                     .replace(R.id.container, announceFragment)
                                     .commit();
                             return true;
-                        case R.id.userList:
-                            UserListFragment userListFragment = new UserListFragment();
+                        case R.id.checkList:
+                            CheckListFragment checkListFragment = new CheckListFragment();
                             getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.container, userListFragment)
+                                    .replace(R.id.container, checkListFragment)
                                     .commit();
                             return true;
                         case R.id.myInfo:
