@@ -45,7 +45,7 @@ public class MemberInitActivity extends BasicActivity {
     private RelativeLayout buttonBackgroundLayout;
     private String profilePath;
     private FirebaseUser user;
-    private String authState = "x";
+    private String authState;
     private String building;
     private String unit;
 
@@ -114,22 +114,13 @@ public class MemberInitActivity extends BasicActivity {
     private void storageUploader() {                                                                            // part5 : 회원정보 업로드 로직 (3')
         final String name = ((EditText) findViewById(R.id.name)).getText().toString();
         final String phoneNumber = ((EditText) findViewById(R.id.phoneNumber)).getText().toString();
-        final String userID = ((EditText) findViewById(R.id.userID)).getText().toString();
+        final String birth = ((EditText) findViewById(R.id.birth)).getText().toString();
         final String address = ((EditText) findViewById(R.id.address)).getText().toString();
-//        Spinner building_spinner = (Spinner) findViewById(R.id.building_spinner);
-//        Spinner unit_spinner = (Spinner) findViewById(R.id.unit_spinner);
-//                building = (String) building_spinner.getItemAtPosition(position);
         final String building = ((Spinner)findViewById(R.id.building_spinner)).getSelectedItem().toString();
-//        unit_spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                unit = (String) parent.getItemAtPosition(position);
-//            }
-//        });
         final String unit = ((Spinner)findViewById(R.id.unit_spinner)).getSelectedItem().toString();
+        final String userUID = null;
 
-
-        if (name.length() > 0 && phoneNumber.length() > 9 && userID.length() > 5 && address.length() > 0) {
+        if (name.length() > 0 && phoneNumber.length() > 9 && birth.length() > 5 && address.length() > 0) {
             loaderLayout.setVisibility(View.VISIBLE);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
@@ -138,7 +129,7 @@ public class MemberInitActivity extends BasicActivity {
             final Date createdID = new Date();                                                              // + : 사용자 리스트 수정 (현재 날짜 받아오기 [ 사진마다 달라서 그때 그댸 불르기])
 
             if (profilePath == null) {                                                                      // part5 : 데이터 추가 (9'10")
-                UserInfo userInfo = new UserInfo(name, phoneNumber, userID, createdID, address, building, unit, authState);          // + : 사용자 리스트 수정 (가입날짜 추가[사진 없는 버전])
+                UserInfo userInfo = new UserInfo(name, phoneNumber, birth, createdID, address, building, unit, authState, userUID);          // + : 사용자 리스트 수정 (가입날짜 추가[사진 없는 버전])
                 storeUploader(userInfo);
             } else {
                 try {
@@ -158,7 +149,7 @@ public class MemberInitActivity extends BasicActivity {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();                                         // part7 : 입력한 회원정보를 DB에 저장 (28')
                                 Log.d("LOOG", " " + task.getResult().toString());
-                                UserInfo userInfo = new UserInfo(name, phoneNumber, userID, address, building, unit, createdID, downloadUri.toString(), authState);      // + : 사용자 리스트 수정 (가입날짜 추가)
+                                UserInfo userInfo = new UserInfo(name, phoneNumber, birth, address, building, unit, createdID, downloadUri.toString(), authState, userUID);      // + : 사용자 리스트 수정 (가입날짜 추가)
                                 storeUploader(userInfo);
                             } else {
                                 showToast(MemberInitActivity.this, "회원정보를 보내는데 실패하였습니다.");

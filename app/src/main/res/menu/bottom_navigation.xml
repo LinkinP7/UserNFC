@@ -15,5 +15,5 @@
     <item
         android:id="@+id/myInfo"
         android:icon="@drawable/ic_group_black_24dp"
-        android:title="설정" />
+        android:title="회원정보" />
 </menu>

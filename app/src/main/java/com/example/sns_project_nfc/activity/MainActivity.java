@@ -10,14 +10,17 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.sns_project_nfc.R;
+import com.example.sns_project_nfc.UserInfo;
 import com.example.sns_project_nfc.fragment.AnnounceFragment;
 import com.example.sns_project_nfc.fragment.CheckListFragment;
 import com.example.sns_project_nfc.fragment.UserInfoFragment;
 import com.example.sns_project_nfc.fragment.UserListFragment;
 import com.example.sns_project_nfc.fragment.nfcFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -157,4 +160,5 @@ public class MainActivity extends BasicActivity {                               
                 })
                 .show();
     }
+
 }

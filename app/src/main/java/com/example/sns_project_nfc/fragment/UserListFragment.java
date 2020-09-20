@@ -184,6 +184,7 @@ public class UserListFragment extends Fragment {
                                         document.getData().get("unit").toString(),
                                         new Date(document.getDate("createdID").getTime()),                    // + : 사용자 리스트 수정 (날짜 받아오기)
                                         document.getData().get("authState").toString(),
+                                        document.getData().get("userUID").toString(),
                                         document.getData().get("photoUrl") == null ? null : document.getData().get("photoUrl").toString()));
 
                             }

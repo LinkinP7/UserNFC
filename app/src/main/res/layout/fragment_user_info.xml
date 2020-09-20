@@ -77,6 +77,18 @@
                     android:layout_margin="5dp"
                     android:textSize="18dp" />
 
+                <TextView
+                    android:id="@+id/authTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textSize="18dp" />
+                <Button
+                    android:id="@+id/authButton"
+                    android:text="세대인증 신청"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
             </LinearLayout>
             <Button
                 android:onClick="btn_logout"
