@@ -161,4 +161,21 @@ public class MainActivity extends BasicActivity {                               
                 .show();
     }
 
+    public void btn_withdraw(View v) {
+        new AlertDialog.Builder(this)
+                .setTitle("회원탈퇴").setMessage("회원탈퇴 하시겠습니까?")
+                .setNegativeButton("회원탈퇴", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        auth.getCurrentUser().delete();
+                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(i);
+                    }
+                })
+                .setPositiveButton("취소", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
+    }
 }
