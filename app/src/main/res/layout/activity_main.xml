@@ -7,20 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-
-
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottomNavigationView"
         android:layout_below="@+id/toolbar">
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NFC를 켜고 태그하여주십시오" />
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

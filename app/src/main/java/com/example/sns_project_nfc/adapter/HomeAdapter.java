@@ -120,9 +120,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MainViewHolder
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.modify:
-                        myStartActivity(WritePostActivity.class, mDataset.get(position));
-                        return true;
                     case R.id.delete:
                         firebaseHelper.storageDelete(mDataset.get(position));
                         return true;

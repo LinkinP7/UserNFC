@@ -67,7 +67,7 @@ public class AnnounceFragment extends Fragment {
         homeAdapter.setOnPostListener(onPostListener);
 
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        view.findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
+
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -130,22 +130,7 @@ public class AnnounceFragment extends Fragment {
         homeAdapter.playerStop();                                                                       //part21 : 앱정지시 비디오 정지 실행문 (15'10")
     }
 
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                /*
-                case R.id.logoutButton:
-                    FirebaseAuth.getInstance().signOut();
-                    myStartActivity(SignUpActivity.class);
-                    break;
-                */
-                case R.id.floatingActionButton:                                                         // 아마 새로고침..?
-                    myStartActivity(WritePostActivity.class);
-                    break;
-            }
-        }
-    };
+
 
     OnPostListener onPostListener = new OnPostListener() {
         @Override

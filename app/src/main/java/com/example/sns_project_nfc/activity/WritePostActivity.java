@@ -159,14 +159,6 @@ public class WritePostActivity extends BasicActivity {
                         buttonsBackgroundLayout.setVisibility(View.GONE);                               // part12 : 실행되고나면 사라지게 설정 (15'19")
                     }
                     break;
-                case R.id.imageModify:
-                    myStartActivity(GalleryActivity.class, GALLERY_IMAGE, 1);               // part12 : 실행중인 Activity의 request 값 다르게 설정 (13'41")
-                    buttonsBackgroundLayout.setVisibility(View.GONE);
-                    break;
-                case R.id.videoModify:
-                    myStartActivity(GalleryActivity.class, GALLERY_VIDEO, 1);               // part12 : 실행중인 Activity의 request 값 다르게 설정 (13'41")
-                    buttonsBackgroundLayout.setVisibility(View.GONE);
-                    break;
                 case R.id.delete:                                                                       // part12 : 작성중인 게시물에서 사진 빼기 (12'30")
                     final View selectedView = (View) selectedImageVIew.getParent();                     // part12 : parents를 먼저 불러옴
                     String path = pathList.get(parent.indexOfChild(selectedView) - 1);                  // part20 : 172,173줄 없으면 사진 택하고 바로 삭제시 에러 : 아직 안 올라갔기 째문

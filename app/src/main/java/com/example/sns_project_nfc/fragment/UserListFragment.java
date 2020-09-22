@@ -128,22 +128,7 @@ public class UserListFragment extends Fragment {
         super.onPause();
     }
 
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                /*
-                case R.id.logoutButton:
-                    FirebaseAuth.getInstance().signOut();
-                    myStartActivity(SignUpActivity.class);
-                    break;
-                */
-                case R.id.floatingActionButton:
-                    myStartActivity(WritePostActivity.class);
-                    break;
-            }
-        }
-    };
+
 
     OnPostListener onPostListener = new OnPostListener() {
         @Override
