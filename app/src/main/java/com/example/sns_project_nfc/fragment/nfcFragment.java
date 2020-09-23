@@ -91,39 +91,39 @@ public class nfcFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    final DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        if (document.exists()) {
-                            if(document.getData().get("authState").equals("O")){
-                                mNdeMessage=new NdefMessage(
-                                        new NdefRecord[]{
-                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),                        //텍스트 데이터
-                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),                   //텍스트 데이터
-                                                createNewTextRecord("동: " + userInfo.getBuilding(), Locale.ENGLISH, true),
-                                                createNewTextRecord("세대인증여부 : 세대인증이 완료된 회원입니다. ", Locale.ENGLISH, true),         //텍스트 데이터
-                                                createNewTextRecord("키값: ", Locale.ENGLISH, true),                              //텍스트 데이터
-                                                createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true),                                        //텍스트 데이터
-                                        }           // authState = "O" && building이 일치할때
-                                );
-                            } else {
-                                mNdeMessage=new NdefMessage(
-                                        new NdefRecord[]{
-                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),                        //텍스트 데이터
-                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),                   //텍스트 데이터
-                                                createNewTextRecord("세대인증여부 : 세대인증이 필요한 회원입니다. ", Locale.ENGLISH, true),         //텍스트 데이터
-                                                createNewTextRecord("세대인증이 완료된 후 다시 시도하여 주십시오.", Locale.ENGLISH, true),                              //텍스트 데이터
-                                                createNewTextRecord("공동 현관 개방 실패", Locale.ENGLISH, true),                                        //텍스트 데이터
-                                        }
-                                );
-                            }
+                final DocumentSnapshot document = task.getResult();
+                if (document != null) {
+                    if (document.exists()) {
+                        if(document.getData().get("authState") != null && document.getData().get("authState").equals("O")) {
+                            mNdeMessage=new NdefMessage(
+                                    new NdefRecord[]{
+                                            createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),                        //텍스트 데이터
+                                            createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),                   //텍스트 데이터
+                                            createNewTextRecord("동: " + userInfo.getBuilding(), Locale.ENGLISH, true),
+                                            createNewTextRecord("세대인증여부 : 세대인증이 완료된 회원입니다. ", Locale.ENGLISH, true),         //텍스트 데이터
+                                            createNewTextRecord("키값: ", Locale.ENGLISH, true),                              //텍스트 데이터
+                                            createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true),                                        //텍스트 데이터
+                                    }           // authState = "O" && building이 일치할때
+                            );
                         } else {
-                            Log.d(TAG, "No such document");
+                            mNdeMessage=new NdefMessage(
+                                    new NdefRecord[]{
+                                            createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),                        //텍스트 데이터
+                                            createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),                   //텍스트 데이터
+                                            createNewTextRecord("세대인증여부 : 세대인증이 필요한 회원입니다. ", Locale.ENGLISH, true),         //텍스트 데이터
+                                            createNewTextRecord("세대인증이 완료된 후 다시 시도하여 주십시오.", Locale.ENGLISH, true),                              //텍스트 데이터
+                                            createNewTextRecord("공동 현관 개방 실패", Locale.ENGLISH, true),                                        //텍스트 데이터
+                                    }
+                            );
                         }
+                    } else {
+                        Log.d(TAG, "No such document");
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
                 }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
             }
+        }
         });
         return view;
     }
@@ -145,7 +145,7 @@ public class nfcFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (nfcAdapter != null) {
-            nfcAdapter.enableForegroundNdefPush(getActivity(), mNdeMessage);
+            nfcAdapter.setNdefPushMessage(mNdeMessage, getActivity());
 
         }
     }
@@ -156,12 +156,13 @@ public class nfcFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (nfcAdapter != null) {
-            nfcAdapter.enableForegroundNdefPush(getActivity(), mNdeMessage);
+            nfcAdapter.setNdefPushMessage(mNdeMessage, getActivity());
         }
     }
     /*
      * 텍스트 형식의 데이터를 mNdeMessage 변수에 넣을 수 있도록 변환해 주는 메소드이다.
      */
+
     public static NdefRecord createNewTextRecord(String text, Locale locale, boolean encodelnUtf8){
         byte[] langBytes = locale.getLanguage().getBytes(Charset.forName("US-ASCII"));
         Charset utfEncoding = encodelnUtf8 ? Charset.forName("UTF-8"):Charset.forName("UTF-16");
@@ -174,5 +175,7 @@ public class nfcFragment extends Fragment {
         System.arraycopy(textBytes, 0, data, 1 + langBytes.length, textBytes.length);
         return new NdefRecord(NdefRecord.TNF_WELL_KNOWN,NdefRecord.RTD_TEXT, new byte[0], data);
     }
+
+
 }
 

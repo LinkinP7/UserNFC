@@ -4,6 +4,11 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/view_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -15,4 +20,10 @@
             android:id="@+id/text" />﻿
 
     </LinearLayout>
+
+    <include
+        layout="@layout/view_loader"
+        android:layout_width="130dp"
+        android:layout_height="83dp"
+        android:visibility="gone" />
 </LinearLayout>
