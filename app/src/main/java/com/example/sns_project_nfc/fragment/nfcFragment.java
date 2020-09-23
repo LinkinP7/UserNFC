@@ -146,7 +146,6 @@ public class nfcFragment extends Fragment {
         super.onResume();
         if (nfcAdapter != null) {
             nfcAdapter.enableForegroundNdefPush(getActivity(), mNdeMessage);
-
         }
     }
     /*
