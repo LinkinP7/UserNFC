@@ -94,7 +94,7 @@ public class nfcFragment extends Fragment {
                     final DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         if (document.exists()) {
-                            if(document.getData().get("authState").equals("O")){
+                            if(document.getData().get("authState") != null && document.getData().get("authState").equals("O")){
                                 mNdeMessage=new NdefMessage(
                                         new NdefRecord[]{
                                                 createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),                        //텍스트 데이터
@@ -145,7 +145,7 @@ public class nfcFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (nfcAdapter != null) {
-            nfcAdapter.enableForegroundNdefPush(getActivity(), mNdeMessage);
+            nfcAdapter.setNdefPushMessage(mNdeMessage, getActivity());
 
         }
     }
@@ -156,7 +156,7 @@ public class nfcFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (nfcAdapter != null) {
-            nfcAdapter.enableForegroundNdefPush(getActivity(), mNdeMessage);
+            nfcAdapter.setNdefPushMessage(mNdeMessage, getActivity());
         }
     }
     /*

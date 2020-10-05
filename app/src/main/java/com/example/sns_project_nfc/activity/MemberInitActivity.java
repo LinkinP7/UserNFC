@@ -45,7 +45,7 @@ public class MemberInitActivity extends BasicActivity {
     private RelativeLayout buttonBackgroundLayout;
     private String profilePath;
     private FirebaseUser user;
-    private String authState;
+    private String authState = "-";
     private String building;
     private String unit;
 

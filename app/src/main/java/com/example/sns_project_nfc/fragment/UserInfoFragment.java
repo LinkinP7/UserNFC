@@ -86,7 +86,7 @@ public class UserInfoFragment extends Fragment {
                             phoneNumberTextView.setText(document.getData().get("phoneNumber").toString());
                             birthDayTextView.setText(document.getData().get("birthDay").toString());
                             addressTextView.setText(document.getData().get("address").toString());
-                            if(document.getData().get("authState") == null){
+                            if(document.getData().get("authState").equals("-")){
                                 Log.d("로그", "null값인가요?");
                                 authTextView.setText("세대인증이 필요한 회원입니다");
                                 authButton.setVisibility(view.VISIBLE);

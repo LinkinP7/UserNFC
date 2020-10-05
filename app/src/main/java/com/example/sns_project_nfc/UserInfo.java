@@ -13,7 +13,7 @@ public class UserInfo {
     private String unit;
     private String photoUrl;
     private Date createdID;                                                                                 // + : 사용자 리스트 수정 (날짜 정보 추가)
-    private String authState = null;
+    private String authState = "-";
     private String userUID = null;
 
     public UserInfo(){}
