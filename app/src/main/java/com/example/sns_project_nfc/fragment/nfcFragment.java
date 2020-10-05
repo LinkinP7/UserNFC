@@ -105,7 +105,7 @@ public class nfcFragment extends Fragment {
                                                 createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true),                                        //텍스트 데이터
                                         }           // authState = "O" && building이 일치할때
                                 );
-                            } else {
+                            } else if(document.getData().get("authState") != null && document.getData().get("authState").equals("X") || document.getData().get("authState").equals("-")) {
                                 mNdeMessage=new NdefMessage(
                                         new NdefRecord[]{
                                                 createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),                        //텍스트 데이터
