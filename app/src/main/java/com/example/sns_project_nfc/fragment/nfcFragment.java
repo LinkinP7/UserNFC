@@ -30,6 +30,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.sns_project_nfc.KeyInfo;
 import com.example.sns_project_nfc.R;
 import com.example.sns_project_nfc.UserInfo;
 import com.example.sns_project_nfc.activity.MainActivity;
@@ -50,7 +51,9 @@ public class nfcFragment extends Fragment {
     private NfcAdapter nfcAdapter;      // NFC 통신관련 변수
     private NdefMessage mNdeMessage;
     private FirebaseUser CurrentUser;
+    private FirebaseFirestore Firestore;
     private UserInfo userInfo;
+    private KeyInfo keyInfo;
     public nfcFragment() {                                                                                 // part22 : 프레그먼트로 내용 이전 (21'40")
         // Required empty public constructor
     }
@@ -69,6 +72,7 @@ public class nfcFragment extends Fragment {
         final TextView text = view.findViewById(R.id.text);
 
         CurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         DocRefe_USERS_CurrentUid();
 
         Toolbar myToolbar = view.findViewById(R.id.toolbar);
@@ -87,35 +91,47 @@ public class nfcFragment extends Fragment {
         else { text.setText("NFC 기능이 꺼져있습니다. 켜주세요"+nfcAdapter+""); }
 
         final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());       // part22 : 유저 정보 프레그먼트 (61')
+
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull final Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     final DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         if (document.exists()) {
-                            if(document.getData().get("authState") != null && document.getData().get("authState").equals("O")){
-                                mNdeMessage=new NdefMessage(
-                                        new NdefRecord[]{
-                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),                        //텍스트 데이터
-                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),                   //텍스트 데이터
-                                                createNewTextRecord("동: " + userInfo.getBuilding(), Locale.ENGLISH, true),
-                                                createNewTextRecord("세대인증여부 : 세대인증이 완료된 회원입니다. ", Locale.ENGLISH, true),         //텍스트 데이터
-                                                createNewTextRecord("키값: ", Locale.ENGLISH, true),                              //텍스트 데이터
-                                                createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true),                                        //텍스트 데이터
-                                        }           // authState = "O" && building이 일치할때
-                                );
-                            } else if(document.getData().get("authState") != null && document.getData().get("authState").equals("X") || document.getData().get("authState").equals("-")) {
-                                mNdeMessage=new NdefMessage(
-                                        new NdefRecord[]{
-                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),                        //텍스트 데이터
-                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),                   //텍스트 데이터
-                                                createNewTextRecord("세대인증여부 : 세대인증이 필요한 회원입니다. ", Locale.ENGLISH, true),         //텍스트 데이터
-                                                createNewTextRecord("세대인증이 완료된 후 다시 시도하여 주십시오.", Locale.ENGLISH, true),                              //텍스트 데이터
-                                                createNewTextRecord("공동 현관 개방 실패", Locale.ENGLISH, true),                                        //텍스트 데이터
+                            final DocumentReference documentReferenceKey = FirebaseFirestore.getInstance().collection("BuildingKey").document(userInfo.getBuilding());
+                            documentReferenceKey.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                                    if(task1.isSuccessful()) {
+                                        final DocumentSnapshot documentKey = task1.getResult();
+                                        if(documentKey != null){
+                                        if (document.getData().get("authState") != null && document.getData().get("authState").equals("O")) {
+                                            mNdeMessage = new NdefMessage(
+                                                    new NdefRecord[]{
+                                                            createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),
+                                                            createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),
+                                                            createNewTextRecord("동: " + userInfo.getBuilding(), Locale.ENGLISH, true),
+                                                            createNewTextRecord("세대인증여부 : 세대인증이 완료된 회원입니다. ", Locale.ENGLISH, true),
+                                                            createNewTextRecord("키값: " + documentKey.getData().get("PassKey"), Locale.ENGLISH, true),
+                                                            createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true)
+                                                    }
+                                            );
+                                        } else if (document.getData().get("authState") != null && document.getData().get("authState").equals("X") || document.getData().get("authState").equals("-")) {
+                                            mNdeMessage = new NdefMessage(
+                                                    new NdefRecord[]{
+                                                            createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),
+                                                            createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),
+                                                            createNewTextRecord("세대인증여부 : 세대인증이 필요한 회원입니다. ", Locale.ENGLISH, true),
+                                                            createNewTextRecord("세대인증이 완료된 후 다시 시도하여 주십시오.", Locale.ENGLISH, true),
+                                                            createNewTextRecord("공동 현관 개방 실패", Locale.ENGLISH, true)
+                                                    }
+                                            );
                                         }
-                                );
-                            }
+                                    }}
+                                }
+                            });
+
                         } else {
                             Log.d(TAG, "No such document");
                         }
