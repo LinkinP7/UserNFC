@@ -93,44 +93,46 @@ public class nfcFragment extends Fragment {
         final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());       // part22 : 유저 정보 프레그먼트 (61')
 
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull final Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    final DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        if (document.exists()) {
-                            final DocumentReference documentReferenceKey = FirebaseFirestore.getInstance().collection("BuildingKey").document(userInfo.getBuilding());
-                            documentReferenceKey.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
-                                    if(task1.isSuccessful()) {
-                                        final DocumentSnapshot documentKey = task1.getResult();
-                                        if(documentKey != null){
-                                        if (document.getData().get("authState") != null && document.getData().get("authState").equals("O")) {
-                                            mNdeMessage = new NdefMessage(
-                                                    new NdefRecord[]{
-                                                            createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),
-                                                            createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),
-                                                            createNewTextRecord("동: " + userInfo.getBuilding(), Locale.ENGLISH, true),
-                                                            createNewTextRecord("세대인증여부 : 세대인증이 완료된 회원입니다. ", Locale.ENGLISH, true),
-                                                            createNewTextRecord("키값: " + documentKey.getData().get("PassKey"), Locale.ENGLISH, true),
-                                                            createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true)
-                                                    }
-                                            );
-                                        } else if (document.getData().get("authState") != null && document.getData().get("authState").equals("X") || document.getData().get("authState").equals("-")) {
-                                            mNdeMessage = new NdefMessage(
-                                                    new NdefRecord[]{
-                                                            createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),
-                                                            createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),
-                                                            createNewTextRecord("세대인증여부 : 세대인증이 필요한 회원입니다. ", Locale.ENGLISH, true),
-                                                            createNewTextRecord("세대인증이 완료된 후 다시 시도하여 주십시오.", Locale.ENGLISH, true),
-                                                            createNewTextRecord("공동 현관 개방 실패", Locale.ENGLISH, true)
-                                                    }
-                                            );
-                                        }
-                                    }}
-                                }
-                            });
+                                      @Override
+                            public void onComplete(@NonNull final Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    final DocumentSnapshot document = task.getResult();
+                                    if (document != null) {
+                                        if (document.exists()) {
+                                            final DocumentReference documentReferenceKey = FirebaseFirestore.getInstance().collection("BuildingKey").document(userInfo.getBuilding());
+                                            documentReferenceKey.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                                                    if(task1.isSuccessful()) {
+                                                        final DocumentSnapshot documentKey = task1.getResult();
+                                                        Log.d("키값", String.valueOf(documentKey.getData().get("Passkey")));
+                                                        Log.d("키값", userInfo.getBuilding());
+                                                        if(documentKey != null){
+                                                            if (document.getData().get("authState") != null && document.getData().get("authState").equals("O")) {
+                                                                mNdeMessage = new NdefMessage(
+                                                                        new NdefRecord[]{
+                                                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),
+                                                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),
+                                                                                createNewTextRecord("동: " + userInfo.getBuilding(), Locale.ENGLISH, true),
+                                                                                createNewTextRecord("세대인증여부 : 세대인증이 완료된 회원입니다. ", Locale.ENGLISH, true),
+                                                                                createNewTextRecord("키값: " + documentKey.getData().get("Passkey"), Locale.ENGLISH, true),
+                                                                                createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true),
+                                                                        }
+                                                                );
+                                                            } else if (document.getData().get("authState") != null && document.getData().get("authState").equals("X") || document.getData().get("authState").equals("-")) {
+                                                                mNdeMessage = new NdefMessage(
+                                                                        new NdefRecord[]{
+                                                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),
+                                                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),
+                                                                                createNewTextRecord("세대인증여부 : 세대인증이 필요한 회원입니다. ", Locale.ENGLISH, true),
+                                                                                createNewTextRecord("세대인증이 완료된 후 다시 시도하여 주십시오.", Locale.ENGLISH, true),
+                                                                                createNewTextRecord("공동 현관 개방 실패", Locale.ENGLISH, true)
+                                                                        }
+                                                                );
+                                                            }
+                                                        }}
+                                                }
+                                            });
 
                         } else {
                             Log.d(TAG, "No such document");
