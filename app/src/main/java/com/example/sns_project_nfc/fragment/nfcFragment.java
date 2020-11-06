@@ -90,40 +90,37 @@ public class nfcFragment extends Fragment {
         if(nfcAdapter != null) { text.setText("NFC 단말기를 접촉해주세요"+nfcAdapter+""); }
         else { text.setText("NFC 기능이 꺼져있습니다. 켜주세요"+nfcAdapter+""); }
 
-        final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());       // part22 : 유저 정보 프레그먼트 (61')
-
+        final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());  // users 테이블 연결 후 현재 사용자와 일치하는 데이터를 받아옴
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                      @Override
+                            @Override
                             public void onComplete(@NonNull final Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
-                                    final DocumentSnapshot document = task.getResult();
+                                    final DocumentSnapshot document = task.getResult();  // document에 유저의 정보를 저장
                                     if (document != null) {
-                                        if (document.exists()) {
+                                        if (document.exists()) {     // Not Null 이며 유저의 정보가 존재한다면
                                             final DocumentReference documentReferenceKey = FirebaseFirestore.getInstance().collection("BuildingKey").document(userInfo.getBuilding());
                                             documentReferenceKey.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                 @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {     // 유저 테이블의 빌딩 값과 BuildingKey 테이블에서 UID값과 일치하는 정보를 받아옴 == 공동현관 출입문 키
                                                     if(task1.isSuccessful()) {
                                                         final DocumentSnapshot documentKey = task1.getResult();
-                                                        Log.d("키값", String.valueOf(documentKey.getData().get("Passkey")));
-                                                        Log.d("키값", userInfo.getBuilding());
                                                         if(documentKey != null){
-                                                            if (document.getData().get("authState") != null && document.getData().get("authState").equals("O")) {
+                                                            if (document.getData().get("authState") != null && document.getData().get("authState").equals("O")) {   // 유저의 authState(세대인증 여부)가 완료된 상태인 'O' 일 경우
                                                                 mNdeMessage = new NdefMessage(
-                                                                        new NdefRecord[]{
-                                                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),
-                                                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),
-                                                                                createNewTextRecord("동: " + userInfo.getBuilding(), Locale.ENGLISH, true),
+                                                                        new NdefRecord[]{    // 유저의 정보를 받아와 Ndef 메세지로 가공 후 발송
+                                                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),   // 유저의 이름
+                                                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),  // 유저의 아파트 명
+                                                                                createNewTextRecord("동: " + userInfo.getBuilding(), Locale.ENGLISH, true),  // 유저의 아파트 동
                                                                                 createNewTextRecord("세대인증여부 : 세대인증이 완료된 회원입니다. ", Locale.ENGLISH, true),
-                                                                                createNewTextRecord("키값: " + documentKey.getData().get("Passkey"), Locale.ENGLISH, true),
+                                                                                createNewTextRecord("키값: " + documentKey.getData().get("Passkey"), Locale.ENGLISH, true),  // 빌딩키 테이블에서 받아온 공동현관 출입문 키
                                                                                 createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true),
-                                                                        }
+                                                                        }   // 유저의 아파트 동과 빌딩키 테이블에서 받아온 공동현관 출입문 키를 수신기에서 비교합니다
                                                                 );
                                                             } else if (document.getData().get("authState") != null && document.getData().get("authState").equals("X") || document.getData().get("authState").equals("-")) {
-                                                                mNdeMessage = new NdefMessage(
-                                                                        new NdefRecord[]{
-                                                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),
-                                                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),
+                                                                mNdeMessage = new NdefMessage(          // 유저의 authState(세대인증 여부)가 신청하지 않은 'X'이거나 인증이 진행중인 '-' 일 경우
+                                                                        new NdefRecord[]{    // 유저의 정보를 받아와 Ndef 메세지로 가공 후 발송
+                                                                                createNewTextRecord("이름 : " + userInfo.getName(), Locale.ENGLISH, true),   // 유저의 이름
+                                                                                createNewTextRecord("아파트 : " + userInfo.getAddress(), Locale.ENGLISH, true),  // 유저의 아파트 명
                                                                                 createNewTextRecord("세대인증여부 : 세대인증이 필요한 회원입니다. ", Locale.ENGLISH, true),
                                                                                 createNewTextRecord("세대인증이 완료된 후 다시 시도하여 주십시오.", Locale.ENGLISH, true),
                                                                                 createNewTextRecord("공동 현관 개방 실패", Locale.ENGLISH, true)
