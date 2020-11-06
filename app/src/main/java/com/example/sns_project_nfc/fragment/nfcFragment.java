@@ -114,7 +114,7 @@ public class nfcFragment extends Fragment {
                                                                                 createNewTextRecord("세대인증여부 : 세대인증이 완료된 회원입니다. ", Locale.ENGLISH, true),
                                                                                 createNewTextRecord("키값: " + documentKey.getData().get("Passkey"), Locale.ENGLISH, true),  // 빌딩키 테이블에서 받아온 공동현관 출입문 키
                                                                                 createNewTextRecord("공동 현관 개방 성공", Locale.ENGLISH, true),
-                                                                        }   // 유저의 아파트 동과 빌딩키 테이블에서 받아온 공동현관 출입문 키를 수신기에서 비교합니다
+                                                                        }   // 유저의 아파트 동과 빌딩키 테이블에서 받아온 공동현관 출입문 키를 수신기에서 비교합니다.
                                                                 );
                                                             } else if (document.getData().get("authState") != null && document.getData().get("authState").equals("X") || document.getData().get("authState").equals("-")) {
                                                                 mNdeMessage = new NdefMessage(          // 유저의 authState(세대인증 여부)가 신청하지 않은 'X'이거나 인증이 진행중인 '-' 일 경우
